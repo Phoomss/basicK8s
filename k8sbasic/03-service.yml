@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: demok8s
+spec:
+  type: NodePort # type have NodePort, LoadBalancer, ExternalName, ClusterIP
+  ports: 
+    - targetPort: 80 # port of the container
+      port: 80 # port of the service
+      nodePort: 30080 # port of the node
+      protocol: TCP # protocol of the service
+
+  # type: LoadBalancer
+  # ports:
+  #   - targetPort: 80
+  #     port: 8080
+  #     protocol: TCP
+  selector:
+    app: nginx # label of the pod

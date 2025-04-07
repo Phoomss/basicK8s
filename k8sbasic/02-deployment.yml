@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+  namespace: demok8s
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          resources:
+            requests:
+              memory: "64Mi" # 64Mi = 64 * 1024 * 1024 bytes
+              cpu: "250m" # 250m = 250 millicpu = 0.25 cpu
+            limits:
+              memory: "128Mi" # 128Mi = 128 * 1024 * 1024 bytes
+              cpu: "500m" # 500m = 500 millicpu = 0.5 cpu
+      

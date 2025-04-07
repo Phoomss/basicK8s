@@ -1,0 +1,19 @@
+# network
+networks:
+  web_network:
+    name: nginx_network
+    driver: bridge
+
+
+services:
+# service name
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    volumes:
+      - ./static-html:/usr/share/nginx/html
+    ports:
+      - "82:80"
+    networks:
+      - web_network
+    restart: always

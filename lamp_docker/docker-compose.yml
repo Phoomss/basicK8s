@@ -1,0 +1,55 @@
+networks:
+  lamp_network:
+    name: lamp_network
+    driver: bridge
+
+# create services
+services:
+  # mysql service
+  mysql:
+    image: mysql:latest
+    container_name: lamp_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=attendance_db
+      - MYSQL_USER=admin 
+      - MYSQL_PASSWORD=1234
+    volumes:
+      - ./mysql/data:/var/lib/mysql/ #create volume for mysql data
+      - ./mysql/initdb/:/docker-entrypoint-initdb.d/ #init script create table
+    ports:
+      - "2031:3306"
+    networks:
+      - lamp_network
+    restart: always
+  
+  # php service
+  php:
+    depends_on:
+      - mysql
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: lamp_php
+    volumes:
+      - ./public_html/:/var/www/html/
+    expose:
+      - 9000
+    networks:
+      - lamp_network
+    restart: always
+
+  # nginx service
+  nginx:
+    depends_on:
+      - php
+    image: nginx:stable-alpine
+    container_name: lamp_nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./public_html/:/var/www/html/
+    ports:
+      - "8080:80"
+    networks:
+      - lamp_network
+    restart: always

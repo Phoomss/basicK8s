@@ -1,0 +1,74 @@
+networks:
+  mern_app:
+    name: mern_app
+    driver: bridge
+
+services:
+# postgres service
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: storedb
+    ports:
+      - "6432:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data #mounting volume
+      - ./sql/init_postgresql.sql:/docker-entrypoint-initdb.d/init.sql #mounting postgresql file
+    networks:
+      - mern_app
+    restart: always
+
+# mysql service
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: storedb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "5306:3306"
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql #mounting volume
+      - ./sql/init_mysql.sql:/docker-entrypoint-initdb.d/init.sql #mounting mysql file
+    networks:
+      - mern_app
+    restart: always
+
+# sql server service (azure sql edge)
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: mssql_db
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: "MyPassword@123"
+      MSSQL_DATABASE: storedb
+    ports:
+      - "1533:1433"
+    volumes:
+      - ./volumes/mssql:/var/opt/mssql  # Mount volume สำหรับ SQL Server
+      - ./sql/init_sqlserver.sql:/var/opt/mssql/init.sql
+    networks:
+      - mern_app
+    restart: always
+
+  # MongoDB Service
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myuser
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+      MONGO_INITDB_DATABASE: storedb
+    ports:
+      - "37017:27017"
+    volumes:
+      - ./volumes/mongodb:/data/db  # Mount volume สำหรับ MongoDB
+      - ./sql/init_mongodb.json:/docker-entrypoint-initdb.d/init.json
+    networks:
+      - mern_app
+    restart: always

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+  namespace: demok8s
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 #  1 extra pod can be created during the update
+      maxUnavailable: 1 # 1 pod can be unavailable during the update
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: httpd
+          image: httpd
+          resources:
+            requests:
+              memory: "100Mi" # 64Mi = 64 * 1024 * 1024 bytes
+              cpu: "100m" # 250m = 250 millicpu = 0.25 cpu
+            limits:
+              memory: "200Mi" # 128Mi = 128 * 1024 * 1024 bytes
+              cpu: "200m" # 500m = 500 millicpu = 0.5 cpu
+      
