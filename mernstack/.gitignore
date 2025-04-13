@@ -1,0 +1,6 @@
+mongodb/data/
+nodejs/node_modules/
+frontend/node_modules/
+mongodb_deployed.yaml
+nodejs_deployed.yaml
+react_deployed.yaml
