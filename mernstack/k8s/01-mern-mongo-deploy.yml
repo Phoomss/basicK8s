@@ -57,13 +57,6 @@ spec:
                 secretKeyRef:
                   name: mongodb-secrets
                   key: database
-          resources:
-            requests:
-              memory: "500Mi"
-              cpu: "250m"
-            limits:
-              memory: "600Mi"
-              cpu: "800m"
           volumeMounts:
             - name: mongodb-storage
               mountPath: "/data/db"
