@@ -18,9 +18,16 @@ spec:
       containers:
         - name: nodejs
           image: iamsamitdev/mern_nodejs:1.0
-          imagePullPolicy: Always # Always pull the latest image
+          imagePullPolicy: Always # บอกให้ Kubernetes ดึง Image ใหม่ทุกครั้ง
           ports:
             - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
           env:
             - name: DATABASE_USER
               valueFrom:
